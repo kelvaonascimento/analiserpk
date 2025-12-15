@@ -18,10 +18,10 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json(lead)
-  } catch (error) {
-    console.error('Erro ao criar lead:', error)
+  } catch (error: any) {
+    console.error('Erro ao criar lead:', error?.message || error)
     return NextResponse.json(
-      { error: 'Erro ao criar lead' },
+      { error: 'Erro ao criar lead', details: error?.message || String(error) },
       { status: 500 }
     )
   }
