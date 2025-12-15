@@ -99,7 +99,6 @@ export default function StepLead({ data, onChange }: StepLeadProps) {
               <SelectValue placeholder="Selecione seu cargo" />
             </SelectTrigger>
             <SelectContent className="bg-zinc-800 border-zinc-700 max-h-[300px]">
-              <SelectItem value="" disabled className="text-zinc-500">Selecione seu cargo</SelectItem>
               <div className="px-2 py-1 text-xs text-zinc-500 font-semibold">Diretoria</div>
               {CARGOS.slice(0, 5).map((cargo) => (
                 <SelectItem key={cargo.value} value={cargo.label} className="text-white">
