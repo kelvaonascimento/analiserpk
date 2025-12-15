@@ -540,6 +540,7 @@ export interface FormData {
     entregaMes: number
     entregaAno: number
     percentualVendido: number
+    vgv?: number // Valor Geral de Vendas estimado
   }
   // Step 4: Unidades e preços
   unidades: Unidade[]

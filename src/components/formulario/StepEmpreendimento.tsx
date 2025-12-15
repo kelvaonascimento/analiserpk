@@ -26,6 +26,7 @@ interface EmpreendimentoBasico {
   entregaMes: number
   entregaAno: number
   percentualVendido: number
+  vgv?: number  // Valor Geral de Vendas estimado
 }
 
 // Interface para resposta da ViaCEP
@@ -477,6 +478,39 @@ export default function StepEmpreendimento({ data, onChange }: StepEmpreendiment
               onChange={(e) => handleChange('percentualVendido', parseInt(e.target.value) || 0)}
               className="bg-zinc-800 border-zinc-700 text-white"
             />
+          </div>
+        </div>
+      </div>
+
+      {/* Projeção Financeira */}
+      <div className="space-y-4">
+        <h3 className="text-white font-medium border-b border-zinc-800 pb-2">Projeção Financeira</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-zinc-300">VGV Estimado (R$) *</Label>
+            <Input
+              type="number"
+              min={0}
+              step={100000}
+              value={data.vgv || ''}
+              onChange={(e) => handleChange('vgv', parseFloat(e.target.value) || 0)}
+              placeholder="Ex: 50000000 (50 milhões)"
+              className="bg-zinc-800 border-zinc-700 text-white"
+            />
+            <p className="text-zinc-500 text-xs">
+              Valor Geral de Vendas projetado para o empreendimento
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-zinc-400 text-xs">VGV Formatado</Label>
+            <div className="h-10 bg-zinc-900 border border-zinc-700 rounded-md flex items-center px-3">
+              <span className="text-orange-500 font-medium">
+                {data.vgv && data.vgv > 0
+                  ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 }).format(data.vgv)
+                  : '—'
+                }
+              </span>
+            </div>
           </div>
         </div>
       </div>

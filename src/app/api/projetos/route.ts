@@ -22,6 +22,9 @@ export async function POST(request: NextRequest) {
       body.empreendimento?.endereco?.cidade || 'cidade'
     )
 
+    // Extrair VGV do empreendimento se existir
+    const vgv = body.empreendimento?.especificacoes?.vgv || body.vgv || null
+
     const projeto = await prisma.projeto.create({
       data: {
         slug,
@@ -29,6 +32,7 @@ export async function POST(request: NextRequest) {
         status: 'captando_dados',
         empreendimento: body.empreendimento || null,
         concorrentes: body.concorrentes || null,
+        vgv: vgv ? parseFloat(vgv) : null,
       },
     })
 

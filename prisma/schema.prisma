@@ -53,6 +53,9 @@ model Projeto {
   concorrentes   Json?
   analise        Json?
 
+  // VGV do empreendimento (em reais)
+  vgv Float?
+
   // PDFs
   pdfPerfilEconomico String?
   pdfPanorama        String?
@@ -64,4 +67,13 @@ model Projeto {
 
   @@index([status])
   @@index([criadoEm])
+}
+
+// Configurações globais do sistema
+model Config {
+  id    String @id @default("global")
+  chave String @unique
+  valor String
+
+  @@index([chave])
 }

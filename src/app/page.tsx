@@ -4,15 +4,16 @@ import { motion } from 'framer-motion'
 import {
   ArrowRight, BarChart3, Target, Users, Sparkles, CheckCircle2, Building2,
   TrendingUp, Brain, Cpu, Shield, Zap, Award, Globe, LineChart, Rocket,
-  ChevronRight, Star, Play
+  ChevronRight, Star, Play, PieChart
 } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useState, useEffect } from 'react'
 
-// Métricas da RPK
-const METRICS = [
+// Métricas estáticas da RPK (VGV Lançados)
+const STATIC_METRICS = [
   { value: 'R$ 700M+', label: 'em VGV Lançados', icon: TrendingUp },
   { value: '50+', label: 'Construtoras Atendidas', icon: Building2 },
   { value: '200+', label: 'Lançamentos Analisados', icon: BarChart3 },
@@ -80,6 +81,28 @@ const TESTIMONIALS = [
 ]
 
 export default function HomePage() {
+  const [vgvAnalisado, setVgvAnalisado] = useState('R$ 1B+')
+
+  useEffect(() => {
+    // Buscar métricas da API
+    fetch('/api/metricas-publicas')
+      .then(res => res.json())
+      .then(data => {
+        if (data.vgvAnalisadoFormatado) {
+          setVgvAnalisado(data.vgvAnalisadoFormatado)
+        }
+      })
+      .catch(err => console.error('Erro ao buscar métricas:', err))
+  }, [])
+
+  // Métricas dinâmicas combinadas
+  const METRICS = [
+    { value: 'R$ 700M+', label: 'em VGV Lançados', icon: TrendingUp },
+    { value: vgvAnalisado, label: 'em VGV Analisados', icon: PieChart, highlight: true },
+    { value: '50+', label: 'Construtoras Atendidas', icon: Building2 },
+    { value: '8 anos', label: 'de Mercado Imobiliário', icon: Award },
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950">
       {/* Header */}
@@ -156,14 +179,26 @@ export default function HomePage() {
           >
             {METRICS.map((metric, index) => {
               const Icon = metric.icon
+              const isHighlight = 'highlight' in metric && metric.highlight
               return (
-                <Card key={index} className="bg-zinc-900/50 border-zinc-800 hover:border-orange-500/30 transition-colors">
+                <Card key={index} className={`transition-colors ${
+                  isHighlight
+                    ? 'bg-gradient-to-br from-orange-500/20 to-purple-500/20 border-orange-500/50 hover:border-orange-500/70'
+                    : 'bg-zinc-900/50 border-zinc-800 hover:border-orange-500/30'
+                }`}>
                   <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mx-auto mb-3">
-                      <Icon className="w-6 h-6 text-orange-500" />
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 ${
+                      isHighlight ? 'bg-gradient-to-br from-orange-500 to-purple-500' : 'bg-orange-500/10'
+                    }`}>
+                      <Icon className={`w-6 h-6 ${isHighlight ? 'text-white' : 'text-orange-500'}`} />
                     </div>
                     <p className="text-3xl font-bold text-white mb-1">{metric.value}</p>
-                    <p className="text-zinc-500 text-sm">{metric.label}</p>
+                    <p className={`text-sm ${isHighlight ? 'text-orange-400 font-medium' : 'text-zinc-500'}`}>{metric.label}</p>
+                    {isHighlight && (
+                      <Badge className="mt-2 bg-purple-500/30 text-purple-300 text-xs">
+                        Atualizado em tempo real
+                      </Badge>
+                    )}
                   </CardContent>
                 </Card>
               )
@@ -500,7 +535,7 @@ export default function HomePage() {
               <span>Pioneiros em IA para o Mercado Imobiliário</span>
             </div>
             <p className="text-zinc-600 text-sm">
-              © {new Date().getFullYear()} RPK Agency. Todos os direitos reservados.
+              © {new Date().getFullYear()} Agência RPK. Todos os direitos reservados.
             </p>
           </div>
         </div>

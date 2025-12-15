@@ -1105,10 +1105,10 @@ export default function LandingPage({ projeto }: LandingPageProps) {
             <span className="text-2xl font-bold text-orange-500"> Analise</span>
           </div>
           <p className="text-zinc-500 text-sm mb-4">
-            Analise gerada por RPK Agency - Dados de mercado: IBGE, CAGED, BCB
+            Análise gerada por Agência RPK - Dados de mercado: IBGE, CAGED, BCB
           </p>
           <p className="text-zinc-600 text-xs">
-            {new Date().getFullYear()} RPK Agency. Todos os direitos reservados.
+            {new Date().getFullYear()} Agência RPK. Todos os direitos reservados.
           </p>
         </div>
       </footer>

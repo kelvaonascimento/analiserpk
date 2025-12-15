@@ -52,6 +52,7 @@ const initialFormData: FormData = {
     entregaMes: 1,
     entregaAno: new Date().getFullYear() + 2,
     percentualVendido: 0,
+    vgv: 0,
   },
   unidades: [
     {
@@ -131,6 +132,7 @@ export default function CriarPage() {
               andares: formData.empreendimentoBasico.andares,
               unidadesTotal: formData.empreendimentoBasico.unidadesTotal,
               elevadores: formData.empreendimentoBasico.elevadores,
+              vgv: formData.empreendimentoBasico.vgv || null,
             },
             unidades: formData.unidades,
             entrega: {
