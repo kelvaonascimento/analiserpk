@@ -7,9 +7,6 @@ export async function GET() {
     const inicioSemana = new Date(hoje)
     inicioSemana.setDate(hoje.getDate() - 7)
 
-    const inicio30Dias = new Date(hoje)
-    inicio30Dias.setDate(hoje.getDate() - 30)
-
     // Métricas principais
     const [
       totalLeads,
@@ -17,7 +14,6 @@ export async function GET() {
       totalProjetos,
       projetosCompletos,
       leadsPorStatus,
-      leadsPorDia,
       cidadesMaisAtivas,
       ultimosLeads,
       ultimosProjetos
@@ -43,15 +39,6 @@ export async function GET() {
         by: ['status'],
         _count: { status: true }
       }),
-
-      // Leads por dia (últimos 30 dias)
-      prisma.$queryRaw`
-        SELECT DATE("criadoEm") as data, COUNT(*)::int as count
-        FROM "Lead"
-        WHERE "criadoEm" >= ${inicio30Dias}
-        GROUP BY DATE("criadoEm")
-        ORDER BY data DESC
-      ` as Promise<{ data: Date; count: number }[]>,
 
       // Cidades mais ativas
       prisma.lead.groupBy({
@@ -86,26 +73,31 @@ export async function GET() {
       totalProjetos,
       projetosCompletos,
       taxaConversao,
-      leadsPorStatus: leadsPorStatus.map(l => ({
+      leadsPorStatus: (leadsPorStatus || []).map(l => ({
         status: l.status,
         count: l._count.status
       })),
-      leadsPorDia: (leadsPorDia || []).map(l => ({
-        data: l.data,
-        count: l.count
-      })),
-      cidadesMaisAtivas: cidadesMaisAtivas.map(c => ({
+      leadsPorDia: [],
+      cidadesMaisAtivas: (cidadesMaisAtivas || []).map(c => ({
         cidade: c.cidadeEmpreendimento,
         count: c._count.cidadeEmpreendimento
       })),
-      ultimosLeads,
-      ultimosProjetos
+      ultimosLeads: ultimosLeads || [],
+      ultimosProjetos: ultimosProjetos || []
     })
   } catch (error) {
     console.error('Erro ao buscar métricas:', error)
-    return NextResponse.json(
-      { error: 'Erro ao buscar métricas' },
-      { status: 500 }
-    )
+    return NextResponse.json({
+      totalLeads: 0,
+      leadsEstaSemana: 0,
+      totalProjetos: 0,
+      projetosCompletos: 0,
+      taxaConversao: 0,
+      leadsPorStatus: [],
+      leadsPorDia: [],
+      cidadesMaisAtivas: [],
+      ultimosLeads: [],
+      ultimosProjetos: []
+    })
   }
 }
