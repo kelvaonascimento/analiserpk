@@ -25,15 +25,27 @@ model Lead {
 
   // CRM Fields
   status        String    @default("novo") // novo, contatado, qualificado, convertido, perdido
-  origem        String    @default("organico") // organico, ads, indicacao
+  origem        String    @default("organico") // organico, ads, indicacao, lp-racional, lp-emocional, lp-urgencia, lp-ebook
   notas         String?
   ultimoContato DateTime?
+
+  // Landing Page Tracking
+  landingPage   String?   // URL de origem da LP
+  persona       String?   // ceo, marketing, comercial
+  abordagem     String?   // racional, emocional, urgencia, ebook
+  ebookBaixado  Boolean   @default(false)
+
+  // UTM Tracking
+  utmSource     String?
+  utmMedium     String?
+  utmCampaign   String?
 
   projetos Projeto[]
 
   @@index([email])
   @@index([status])
   @@index([criadoEm])
+  @@index([abordagem])
 }
 
 model Projeto {

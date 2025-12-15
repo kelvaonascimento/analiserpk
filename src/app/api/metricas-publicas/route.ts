@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db'
 
 // VGV inicial base (1 bilhão = 1.000.000.000)
 const VGV_BASE = 1000000000
