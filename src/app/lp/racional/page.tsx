@@ -276,7 +276,7 @@ export default function RacionalPage() {
           <LpCaptureForm
             abordagem="racional"
             ctaTexto="Criar Diagnóstico Gratuito"
-            variant="medium"
+            variant="full"
           />
         </div>
       </section>

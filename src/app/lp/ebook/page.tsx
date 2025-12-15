@@ -193,7 +193,7 @@ export default function EbookPage() {
           <LpCaptureForm
             abordagem="ebook"
             ctaTexto="Baixar Ebook Gratuito"
-            variant="medium"
+            variant="full"
           />
         </div>
       </section>

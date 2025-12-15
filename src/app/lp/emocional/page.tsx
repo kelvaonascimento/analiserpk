@@ -290,7 +290,7 @@ export default function EmocionalPage() {
           <LpCaptureForm
             abordagem="emocional"
             ctaTexto="Quero Transformar Meus Resultados"
-            variant="medium"
+            variant="full"
           />
         </div>
       </section>

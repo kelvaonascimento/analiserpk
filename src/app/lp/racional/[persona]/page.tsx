@@ -299,7 +299,7 @@ export default function RacionalPersonaPage({ params }: { params: Promise<{ pers
             abordagem="racional"
             persona={persona}
             ctaTexto="Criar Diagnóstico Gratuito"
-            variant="medium"
+            variant="full"
           />
         </div>
       </section>

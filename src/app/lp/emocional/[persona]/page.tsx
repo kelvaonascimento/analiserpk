@@ -302,7 +302,7 @@ export default function EmocionalPersonaPage({ params }: { params: Promise<{ per
             abordagem="emocional"
             persona={persona}
             ctaTexto="Quero Começar Agora"
-            variant="medium"
+            variant="full"
           />
         </div>
       </section>

@@ -99,7 +99,7 @@ export default function UrgenciaPage() {
               <LpCaptureForm
                 abordagem="urgencia"
                 ctaTexto="Começar Agora"
-                variant="minimal"
+                variant="full"
               />
             </motion.div>
           </div>
@@ -338,7 +338,7 @@ export default function UrgenciaPage() {
           <LpCaptureForm
             abordagem="urgencia"
             ctaTexto="Garantir Minha Vaga"
-            variant="minimal"
+            variant="full"
           />
         </div>
       </section>

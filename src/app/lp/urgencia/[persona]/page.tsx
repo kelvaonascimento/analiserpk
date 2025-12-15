@@ -158,7 +158,7 @@ export default function UrgenciaPersonaPage({ params }: { params: Promise<{ pers
                 abordagem="urgencia"
                 persona={persona}
                 ctaTexto="Começar Agora"
-                variant="minimal"
+                variant="full"
               />
             </motion.div>
           </div>
@@ -382,7 +382,7 @@ export default function UrgenciaPersonaPage({ params }: { params: Promise<{ pers
             abordagem="urgencia"
             persona={persona}
             ctaTexto="Garantir Minha Vaga"
-            variant="minimal"
+            variant="full"
           />
         </div>
       </section>
