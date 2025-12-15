@@ -85,8 +85,17 @@ export async function POST(req: NextRequest) {
     })
   } catch (error) {
     console.error('Erro ao criar lead LP:', error)
+
+    // Retornar detalhes do erro para debug
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
+    const errorStack = error instanceof Error ? error.stack : ''
+
     return NextResponse.json(
-      { error: 'Erro interno do servidor' },
+      {
+        error: 'Erro interno do servidor',
+        details: errorMessage,
+        stack: process.env.NODE_ENV === 'development' ? errorStack : undefined
+      },
       { status: 500 }
     )
   }

@@ -65,7 +65,11 @@ function LpCaptureFormInner({
         }),
       })
 
-      if (!response.ok) throw new Error('Erro ao enviar')
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('Erro da API:', errorData)
+        throw new Error(errorData.details || 'Erro ao enviar')
+      }
 
       setIsSuccess(true)
 
@@ -81,7 +85,8 @@ function LpCaptureFormInner({
       }, 1500)
     } catch (error) {
       console.error('Erro:', error)
-      alert('Erro ao enviar. Tente novamente.')
+      const message = error instanceof Error ? error.message : 'Erro ao enviar'
+      alert(`Erro: ${message}. Tente novamente.`)
     } finally {
       setIsLoading(false)
     }
