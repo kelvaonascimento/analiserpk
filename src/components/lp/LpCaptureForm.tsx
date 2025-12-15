@@ -8,7 +8,9 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Card, CardContent } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2, ArrowRight, Shield, CheckCircle2 } from 'lucide-react'
+import { CARGOS, FUNCIONARIOS, getCargosPorGrupo } from '@/lib/constants'
 import type { Abordagem, Persona } from '@/lib/lp-content'
 
 interface LpCaptureFormProps {
@@ -24,11 +26,12 @@ function LpCaptureFormInner({
   abordagem,
   persona,
   ctaTexto = 'Criar Diagnóstico Gratuito',
-  variant = 'medium',
+  variant = 'full',
   redirectTo,
 }: LpCaptureFormProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const cargosPorGrupo = getCargosPorGrupo()
 
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -38,6 +41,8 @@ function LpCaptureFormInner({
     whatsapp: '',
     empresa: '',
     cargo: '',
+    numeroFuncionarios: '',
+    cidadeEmpreendimento: '',
     aceitaComunicacao: true,
   })
 
@@ -112,6 +117,10 @@ function LpCaptureFormInner({
     )
   }
 
+  // Campos básicos (minimal): nome, email, whatsapp
+  // Campos medium: + empresa
+  // Campos full: + cargo, funcionários, cidade
+
   return (
     <Card className="bg-zinc-900/50 border-zinc-800">
       <CardContent className="p-6">
@@ -159,9 +168,10 @@ function LpCaptureFormInner({
           {/* Empresa - visível em medium e full */}
           {(variant === 'medium' || variant === 'full') && (
             <div className="space-y-2">
-              <Label htmlFor="empresa" className="text-zinc-300">Empresa / Incorporadora</Label>
+              <Label htmlFor="empresa" className="text-zinc-300">Empresa / Incorporadora *</Label>
               <Input
                 id="empresa"
+                required
                 value={formData.empresa}
                 onChange={(e) => handleChange('empresa', e.target.value)}
                 placeholder="Nome da empresa"
@@ -173,12 +183,65 @@ function LpCaptureFormInner({
           {/* Cargo - visível apenas em full */}
           {variant === 'full' && (
             <div className="space-y-2">
-              <Label htmlFor="cargo" className="text-zinc-300">Cargo</Label>
-              <Input
-                id="cargo"
+              <Label htmlFor="cargo" className="text-zinc-300">Cargo *</Label>
+              <Select
                 value={formData.cargo}
-                onChange={(e) => handleChange('cargo', e.target.value)}
-                placeholder="Seu cargo"
+                onValueChange={(value) => handleChange('cargo', value)}
+                required
+              >
+                <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+                  <SelectValue placeholder="Selecione seu cargo" />
+                </SelectTrigger>
+                <SelectContent className="bg-zinc-800 border-zinc-700 max-h-[300px]">
+                  {Object.entries(cargosPorGrupo).map(([grupo, cargos]) => (
+                    <div key={grupo}>
+                      <div className="px-2 py-1 text-xs text-zinc-500 font-semibold mt-2 first:mt-0">
+                        {grupo}
+                      </div>
+                      {cargos.map((cargo) => (
+                        <SelectItem key={cargo.value} value={cargo.label} className="text-white">
+                          {cargo.label}
+                        </SelectItem>
+                      ))}
+                    </div>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {/* Número de funcionários - visível apenas em full */}
+          {variant === 'full' && (
+            <div className="space-y-2">
+              <Label htmlFor="funcionarios" className="text-zinc-300">Número de funcionários *</Label>
+              <Select
+                value={formData.numeroFuncionarios}
+                onValueChange={(value) => handleChange('numeroFuncionarios', value)}
+                required
+              >
+                <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent className="bg-zinc-800 border-zinc-700">
+                  {FUNCIONARIOS.map((func) => (
+                    <SelectItem key={func.value} value={func.value} className="text-white">
+                      {func.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {/* Cidade do empreendimento - visível apenas em full */}
+          {variant === 'full' && (
+            <div className="space-y-2">
+              <Label htmlFor="cidade" className="text-zinc-300">Cidade do empreendimento</Label>
+              <Input
+                id="cidade"
+                value={formData.cidadeEmpreendimento}
+                onChange={(e) => handleChange('cidadeEmpreendimento', e.target.value)}
+                placeholder="Ex: São Paulo - SP"
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
               />
             </div>

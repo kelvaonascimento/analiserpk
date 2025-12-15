@@ -26,8 +26,21 @@ import {
   Check,
   Phone,
   Briefcase,
-  Clock
+  Clock,
+  Target,
+  BookOpen,
+  Globe,
+  Link2
 } from 'lucide-react'
+import {
+  getOrigemLabel,
+  getOrigemCor,
+  getAbordagemLabel,
+  getAbordagemCor,
+  getPersonaLabel,
+  getPersonaCor,
+  ORIGENS
+} from '@/lib/constants'
 
 interface Lead {
   id: string
@@ -44,6 +57,14 @@ interface Lead {
   criadoEm: string
   atualizadoEm: string
   ultimoContato: string | null
+  // Tracking de LP
+  abordagem: string | null
+  persona: string | null
+  landingPage: string | null
+  ebookBaixado: boolean
+  utmSource: string | null
+  utmMedium: string | null
+  utmCampaign: string | null
   projetos: {
     id: string
     slug: string
@@ -61,13 +82,7 @@ const STATUS_OPTIONS = [
   { value: 'perdido', label: 'Perdido', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
 ]
 
-const ORIGEM_OPTIONS = [
-  { value: 'organico', label: 'Orgânico' },
-  { value: 'ads', label: 'Anúncios' },
-  { value: 'indicacao', label: 'Indicação' },
-  { value: 'evento', label: 'Evento' },
-  { value: 'parceiro', label: 'Parceiro' },
-]
+const ORIGEM_OPTIONS = ORIGENS
 
 export default function LeadDetailPage() {
   const router = useRouter()
@@ -450,6 +465,114 @@ export default function LeadDetailPage() {
               )}
             </CardContent>
           </Card>
+
+          {/* Tracking de Conversão */}
+          {(lead.origem || lead.abordagem || lead.landingPage) && (
+            <Card className="bg-zinc-900 border-zinc-800">
+              <CardHeader className="border-b border-zinc-800">
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Target className="w-5 h-5 text-orange-500" />
+                  Tracking de Conversão
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Origem */}
+                  <div className="flex items-center gap-3 p-4 bg-zinc-800/50 rounded-xl">
+                    <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                      <Globe className="w-5 h-5 text-orange-400" />
+                    </div>
+                    <div>
+                      <p className="text-zinc-500 text-xs uppercase tracking-wider">Origem</p>
+                      <Badge className={getOrigemCor(lead.origem)}>
+                        {getOrigemLabel(lead.origem)}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* Abordagem */}
+                  {lead.abordagem && (
+                    <div className="flex items-center gap-3 p-4 bg-zinc-800/50 rounded-xl">
+                      <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                        <Target className="w-5 h-5 text-purple-400" />
+                      </div>
+                      <div>
+                        <p className="text-zinc-500 text-xs uppercase tracking-wider">Abordagem</p>
+                        <Badge className={getAbordagemCor(lead.abordagem)}>
+                          {getAbordagemLabel(lead.abordagem)}
+                        </Badge>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Persona */}
+                  {lead.persona && (
+                    <div className="flex items-center gap-3 p-4 bg-zinc-800/50 rounded-xl">
+                      <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                        <Users className="w-5 h-5 text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-zinc-500 text-xs uppercase tracking-wider">Persona</p>
+                        <Badge className={getPersonaCor(lead.persona)}>
+                          {getPersonaLabel(lead.persona)}
+                        </Badge>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Landing Page */}
+                  {lead.landingPage && (
+                    <div className="flex items-center gap-3 p-4 bg-zinc-800/50 rounded-xl">
+                      <div className="w-10 h-10 rounded-lg bg-zinc-700/50 flex items-center justify-center">
+                        <Link2 className="w-5 h-5 text-zinc-400" />
+                      </div>
+                      <div>
+                        <p className="text-zinc-500 text-xs uppercase tracking-wider">Landing Page</p>
+                        <p className="text-white text-sm font-mono">{lead.landingPage}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Ebook Baixado */}
+                  {lead.ebookBaixado && (
+                    <div className="flex items-center gap-3 p-4 bg-green-500/10 rounded-xl border border-green-500/20">
+                      <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                        <BookOpen className="w-5 h-5 text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-zinc-500 text-xs uppercase tracking-wider">Ebook</p>
+                        <p className="text-green-400 font-medium">Baixado</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* UTMs */}
+                  {(lead.utmSource || lead.utmMedium || lead.utmCampaign) && (
+                    <div className="md:col-span-2 lg:col-span-3 p-4 bg-zinc-800/50 rounded-xl">
+                      <p className="text-zinc-500 text-xs uppercase tracking-wider mb-2">UTM Tracking</p>
+                      <div className="flex flex-wrap gap-2">
+                        {lead.utmSource && (
+                          <Badge className="bg-zinc-700 text-zinc-300">
+                            source: {lead.utmSource}
+                          </Badge>
+                        )}
+                        {lead.utmMedium && (
+                          <Badge className="bg-zinc-700 text-zinc-300">
+                            medium: {lead.utmMedium}
+                          </Badge>
+                        )}
+                        {lead.utmCampaign && (
+                          <Badge className="bg-zinc-700 text-zinc-300">
+                            campaign: {lead.utmCampaign}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Projetos/Diagnósticos */}
           <Card className="bg-zinc-900 border-zinc-800">
